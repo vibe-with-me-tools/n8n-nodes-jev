@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1 - 2026-09-19
+
+### Documentation
+
+- Describe the package as a helper n8n community node maintained by Brains of Bots, not by TypeSafe, and say where to get support
+
 ## 0.2.0 - 2026-09-19
 
 First published release.

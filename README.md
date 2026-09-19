@@ -10,6 +10,8 @@ Many workflows have a step where something needs a judgment. Which team should h
 
 The probabilities are what make this useful in a workflow. When Jev isn't sure, the numbers show it, so you can send that item to a person instead of acting on a guess.
 
+> **About this node.** This is a helper n8n community node maintained by Brains of Bots. It is not made or supported by TypeSafe. Report problems with the node in this repository's [issues](https://github.com/vibe-with-me-tools/n8n-nodes-jev/issues). For questions about your TypeSafe account, API keys, billing, or the Jev model itself, contact TypeSafe.
+
 ![How the Jev node works](docs/images/how-it-works.svg)
 
 ## Contents
@@ -297,4 +299,4 @@ Use `npm version` rather than `npm run release`: n8n's release command regenerat
 
 ## License
 
-[MIT](LICENSE.md). This community node is maintained by Brains of Bots. Jev and the TypeSafe API are provided by TypeSafe.
+[MIT](LICENSE.md). This helper community node is maintained by Brains of Bots and is not affiliated with TypeSafe. Jev, TypeSafe, and the TypeSafe API are products of TypeSafe; the names are used only to describe what this node connects to.

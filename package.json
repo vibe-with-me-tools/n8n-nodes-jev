@@ -1,7 +1,7 @@
 {
 	"name": "n8n-nodes-jev",
 	"version": "0.2.0",
-	"description": "n8n node for Jev by TypeSafe: classify, route, and score text with questions you define, and get a probability for every answer.",
+	"description": "Helper n8n community node for Jev by TypeSafe: classify, route, and score text with questions you define, and get a probability for every answer.",
 	"license": "MIT",
 	"homepage": "https://github.com/vibe-with-me-tools/n8n-nodes-jev#readme",
 	"keywords": [
