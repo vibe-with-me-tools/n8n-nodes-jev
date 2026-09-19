@@ -1,5 +1,6 @@
 # n8n-nodes-jev
 
+[![CI](https://github.com/vibe-with-me-tools/n8n-nodes-jev/actions/workflows/ci.yml/badge.svg)](https://github.com/vibe-with-me-tools/n8n-nodes-jev/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/n8n-nodes-jev.svg)](https://www.npmjs.com/package/n8n-nodes-jev)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
@@ -264,6 +265,29 @@ The tests in [`test/`](test) use [Vitest](https://vitest.dev) with a stubbed n8n
 ```bash
 sed 's/"n8n-nodes-jev\.jev"/"CUSTOM.jev"/' examples/route-tickets-by-team.json > /tmp/route-dev.json
 ```
+
+### Releasing
+
+Releases are published to npm by the [Publish workflow](.github/workflows/publish.yml) when a version tag is pushed. n8n requires community nodes to be published this way, with npm provenance, to be eligible for verification. Don't run `npm publish` from your machine.
+
+1. Move the entries under **Unreleased** in [CHANGELOG.md](CHANGELOG.md) to a new version heading and commit.
+2. Bump the version. This commits the change and creates a tag such as `v0.3.0`:
+
+   ```bash
+   npm version minor -m "chore: release %s"
+   ```
+
+3. Push the commit and the tag:
+
+   ```bash
+   git push --follow-tags
+   ```
+
+The workflow checks that the tag matches `package.json`, runs the type-check and tests, then lints, builds, and publishes.
+
+Use `npm version` rather than `npm run release`: n8n's release command regenerates CHANGELOG.md from commit messages, which replaces the hand-written entries.
+
+**One-time npm setup.** The first publish needs an npm access token saved as the `NPM_TOKEN` repository secret. Once the package exists on npm, add this repository as a [Trusted Publisher](https://docs.npmjs.com/trusted-publishers) in the package settings (workflow `publish.yml`) and delete the secret. The workflow file lists the exact steps.
 
 ## Links
 

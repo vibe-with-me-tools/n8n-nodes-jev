@@ -4,6 +4,7 @@
 
 - Test suite (Vitest) covering both operations, retries, errors, and the example workflows
 - README diagrams are no longer included in the npm package
+- CI workflow (lint, type-check, tests, build) and a publish workflow with npm provenance
 
 ## 0.2.0
 

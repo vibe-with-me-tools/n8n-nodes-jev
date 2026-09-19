@@ -1,0 +1,77 @@
+# Publishes the package to npm when a version tag (e.g. 0.2.0 or v0.2.0) is pushed.
+#
+# n8n requires community nodes to be published from GitHub Actions with npm provenance
+# (since May 1 2026). Provenance is a signed statement that the package was built by this
+# workflow, from this repository and commit. See "Releasing" in the README.
+#
+# One-time npm setup, pick one:
+#
+#   Trusted Publishing (recommended, no stored secret). Only available once the package
+#   exists on npm. In the package settings on npmjs.com, add a trusted publisher:
+#     GitHub Actions, owner vibe-with-me-tools, repository n8n-nodes-jev,
+#     workflow publish.yml, environment left blank.
+#
+#   Access token (needed for the very first publish). On npmjs.com create a granular access
+#   token with read and write access to this package, and save it in GitHub under
+#   Settings → Secrets and variables → Actions as NPM_TOKEN. After the first publish, set up
+#   Trusted Publishing and delete the secret.
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+permissions: {}
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      # Mints the OIDC token used for the provenance statement and Trusted Publishing.
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Check the tag matches package.json
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$version" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match version $version in package.json"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Publish with provenance
+        # In GitHub Actions, `n8n-node release` lints, builds, and runs `npm publish` with
+        # provenance enabled.
+        run: |
+          if [ -n "$NPM_TOKEN" ]; then
+            npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
+          fi
+          npm run release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
