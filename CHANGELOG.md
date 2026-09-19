@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Test suite (Vitest) covering both operations, retries, errors, and the example workflows
+- README diagrams are no longer included in the npm package
+
 ## 0.2.0
 
 - **Route by Choice** operation: one output per route, picked by a Jev Choice question

@@ -250,10 +250,14 @@ Most of this comes from TypeSafe's notes on [known limitations](https://docs.typ
 
 ```bash
 npm install
-npm run dev     # starts n8n with this node loaded and rebuilds on change
+npm run dev         # starts n8n with this node loaded and rebuilds on change
+npm test            # runs the test suite
+npm run typecheck   # type-checks the node and the tests
 npm run build
 npm run lint
 ```
+
+The tests in [`test/`](test) use [Vitest](https://vitest.dev) with a stubbed n8n context and a fake API, so they need no API key or running n8n. They cover question building, output flattening, routing, retries, error handling, and the example workflows. Test files use the `.mts` extension so n8n's node linter, which applies n8n Cloud's runtime rules to `.ts` files, doesn't treat them as node code.
 
 `npm run dev` needs Node.js 24 or newer, because it runs the latest n8n. In dev mode n8n registers the node as `CUSTOM.jev` instead of `n8n-nodes-jev.jev`. To import the example workflows into a dev instance, change the node type first:
 

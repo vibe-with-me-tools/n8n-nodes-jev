@@ -26,11 +26,15 @@
 		"dev": "n8n-node dev",
 		"lint": "n8n-node lint",
 		"lint:fix": "n8n-node lint --fix",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"typecheck": "tsc --noEmit -p test/tsconfig.json",
 		"release": "n8n-node release",
 		"prepublishOnly": "n8n-node prerelease"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"!dist/docs"
 	],
 	"n8n": {
 		"n8nNodesApiVersion": 1,
@@ -47,7 +51,8 @@
 		"eslint": "9.39.4",
 		"prettier": "3.8.3",
 		"release-it": "20.2.0",
-		"typescript": "5.9.3"
+		"typescript": "5.9.3",
+		"vitest": "5.0.1"
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"
