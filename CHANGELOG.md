@@ -1,23 +1,24 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 - 2026-09-19
 
-- Test suite (Vitest) covering both operations, retries, errors, and the example workflows
-- README diagrams are no longer included in the npm package
-- CI workflow (lint, type-check, tests, build) and a publish workflow with npm provenance
+First published release.
 
-## 0.2.0
+### Operations
 
-- **Route by Choice** operation: one output per route, picked by a Jev Choice question
-- Optional **Low Confidence** output with a configurable confidence threshold
-- Question type selector renamed to **Answer Type** and shown first
+- **Ask Questions**: ask Choice, Score, and Noul questions about each item, all answered in one request
+- **Route by Choice**: one output per route, chosen by Jev, plus an optional **Low Confidence** output below a threshold you set
 
-## 0.1.0
+### Features
 
-- Jev node with the **Ask Questions** operation: Choice, Score, and Noul questions answered in one request per item
 - State from text, JSON, or the whole input item
-- Questions defined with fields or raw JSON (supports structured instructions and criteria)
+- Questions defined with fields or as raw JSON, including structured instructions and criteria
 - Model picker loaded from `GET /v1/models`, or a pinned version ID
-- Simplified output (`<id>`, `<id>_confidence`, `<id>_level`, `_model`) or the raw API response
+- Simplified output (`<id>`, `<id>_confidence`, `<id>_level`, `_model`) or the full API response
 - Automatic retries with backoff on `429` and `529`, honoring `retry-after`
 - Usable as an AI Agent tool
+- Example workflows for ticket triage, team routing, and message screening
+
+### Development
+
+- Test suite (Vitest), CI workflow, and publishing from GitHub Actions with npm provenance
