@@ -6,6 +6,8 @@
 
 An [n8n](https://n8n.io) community node for **Jev**, a decision model from [TypeSafe](https://docs.typesafe.ai).
 
+![The Jev node in an n8n workflow, routing support tickets to billing, technical, and sales queues, with a Low Confidence output to human review](docs/images/route-by-choice-workflow.png)
+
 Many workflows have a step where something needs a judgment. Which team should handle this ticket? Is this lead a good fit? Does this message contain personal data? Jev answers questions like these. You define the question and the answers it can give, and Jev returns one of your answers with a probability for each option. It doesn't write text, so there's no JSON to parse and no free-form reply to check.
 
 The probabilities are what make this useful in a workflow. When Jev isn't sure, the numbers show it, so you can send that item to a person instead of acting on a guess.
