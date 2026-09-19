@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="992" height="328" viewBox="0 0 992 328" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+	<title>How the Jev node works: an input item and typed questions go in, typed answers with probabilities come out, and the workflow decides what to do</title>
+	<defs>
+		<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+			<path d="M0,0 L10,5 L0,10 z" fill="#98A2B3"/>
+		</marker>
+	</defs>
+	<style>
+		.card { fill: #FFFFFF; stroke: #E4E7EC; }
+		.box { fill: #F9FAFB; stroke: #D0D5DD; }
+		.jev { fill: #EEF2FF; stroke: #3B5BDB; }
+		.chip { fill: #FFFFFF; stroke: #D0D5DD; }
+		.step { font-size: 13px; font-weight: 600; fill: #101828; }
+		.num { font-size: 13px; font-weight: 700; fill: #3B5BDB; }
+		.title { font-size: 14px; font-weight: 600; fill: #101828; }
+		.label { font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; fill: #667085; }
+		.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; fill: #1D2939; }
+		.muted { font-size: 12px; fill: #667085; }
+		.caption { font-size: 13px; fill: #475467; }
+		.line { stroke: #98A2B3; stroke-width: 1.5; fill: none; }
+	</style>
+
+	<rect class="card" x="0.5" y="0.5" width="991" height="327" rx="16"/>
+
+	<!-- step headings -->
+	<text x="32" y="52"><tspan class="num">1</tspan><tspan class="step" dx="8">Input item</tspan></text>
+	<text x="276" y="52"><tspan class="num">2</tspan><tspan class="step" dx="8">Jev node</tspan></text>
+	<text x="520" y="52"><tspan class="num">3</tspan><tspan class="step" dx="8">Typed answers</tspan></text>
+	<text x="764" y="52"><tspan class="num">4</tspan><tspan class="step" dx="8">Your workflow decides</tspan></text>
+
+	<!-- 1. input item -->
+	<rect class="box" x="32" y="68" width="196" height="204" rx="10"/>
+	<text class="mono" x="46" y="98">{</text>
+	<text class="mono" x="58" y="118">"ticket": "T-1002",</text>
+	<text class="mono" x="58" y="138">"message": "I was</text>
+	<text class="mono" x="58" y="156">charged twice for</text>
+	<text class="mono" x="58" y="174">order A-104. Please</text>
+	<text class="mono" x="58" y="192">refund the</text>
+	<text class="mono" x="58" y="210">duplicate."</text>
+	<text class="mono" x="46" y="230">}</text>
+
+	<!-- 2. jev node -->
+	<rect class="jev" x="276" y="68" width="196" height="204" rx="10" stroke-width="1.5"/>
+	<text class="title" x="292" y="96">Ask Questions</text>
+	<text class="label" x="292" y="124">STATE</text>
+	<text class="mono" x="292" y="143">{{ $json.message }}</text>
+	<line x1="292" y1="160" x2="456" y2="160" stroke="#C7D2FE"/>
+	<text class="label" x="292" y="182">QUESTIONS</text>
+	<text class="mono" x="292" y="204">department</text><text class="muted" x="456" y="204" text-anchor="end">Choice</text>
+	<text class="mono" x="292" y="226">is_urgent</text><text class="muted" x="456" y="226" text-anchor="end">Noul</text>
+	<text class="mono" x="292" y="248">frustration</text><text class="muted" x="456" y="248" text-anchor="end">Score</text>
+
+	<!-- 3. answers -->
+	<rect class="box" x="520" y="68" width="196" height="204" rx="10"/>
+	<text class="label" x="536" y="96">DEPARTMENT</text>
+	<text class="mono" x="536" y="115" font-weight="600">billing</text><text class="muted" x="700" y="115" text-anchor="end">confidence 0.93</text>
+	<text class="label" x="536" y="145">IS_URGENT</text>
+	<text class="mono" x="536" y="164" font-weight="600">0.21</text><text class="muted" x="700" y="164" text-anchor="end">P(yes)</text>
+	<text class="label" x="536" y="194">FRUSTRATION</text>
+	<text class="mono" x="536" y="213" font-weight="600">1.1</text><text class="muted" x="700" y="213" text-anchor="end">"Frustrated but civil"</text>
+	<line x1="536" y1="232" x2="700" y2="232" stroke="#E4E7EC"/>
+	<text class="muted" x="536" y="254">+ probabilities for every option</text>
+
+	<!-- 4. workflow logic -->
+	<rect class="box" x="764" y="68" width="196" height="204" rx="10"/>
+	<rect class="chip" x="776" y="82" width="172" height="52" rx="8"/>
+	<text class="mono" x="788" y="104">IF is_urgent ≥ 0.8</text>
+	<text class="muted" x="788" y="123">→ page the on-call team</text>
+	<rect class="chip" x="776" y="144" width="172" height="52" rx="8"/>
+	<text class="mono" x="788" y="166">Switch department</text>
+	<text class="muted" x="788" y="185">→ billing / tech / sales</text>
+	<rect class="chip" x="776" y="206" width="172" height="52" rx="8"/>
+	<text class="mono" x="788" y="228">IF confidence &lt; 0.6</text>
+	<text class="muted" x="788" y="247">→ send to a person</text>
+
+	<!-- arrows -->
+	<path class="line" d="M232 170 H270" marker-end="url(#arrow)"/>
+	<path class="line" d="M476 170 H514" marker-end="url(#arrow)"/>
+	<path class="line" d="M720 170 H758" marker-end="url(#arrow)"/>
+
+	<text class="caption" x="496" y="304" text-anchor="middle">One request per item. All questions are answered together, and each answer comes with probabilities your workflow can act on.</text>
+</svg>

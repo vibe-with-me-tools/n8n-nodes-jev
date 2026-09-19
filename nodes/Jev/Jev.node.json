@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-jev.jev",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["AI", "Development"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/vibe-with-me-tools/n8n-nodes-jev#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/vibe-with-me-tools/n8n-nodes-jev#readme"
+			}
+		]
+	}
+}

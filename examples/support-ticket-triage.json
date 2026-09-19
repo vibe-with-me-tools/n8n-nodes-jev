@@ -1,0 +1,266 @@
+{
+	"name": "Jev example: Support ticket triage (Ask Questions)",
+	"nodes": [
+		{
+			"parameters": {},
+			"id": "9fed7a61-2922-4c40-80e9-df905554fbcd",
+			"name": "When clicking ‘Execute workflow’",
+			"type": "n8n-nodes-base.manualTrigger",
+			"typeVersion": 1,
+			"position": [
+				0,
+				300
+			]
+		},
+		{
+			"parameters": {
+				"jsCode": "// Sample support tickets. Replace this node with your helpdesk trigger (Zendesk, Intercom, Gmail, ...).\nreturn [\n  { ticket_id: 'T-1001', message: \"Hi, I've been trying to connect my Stripe account for 3 days and it keeps failing. I'm losing sales. Please help ASAP.\" },\n  { ticket_id: 'T-1002', message: 'I was charged twice for order A-104 this month. Can you refund the duplicate charge?' },\n  { ticket_id: 'T-1003', message: \"We're a team of 40 and thinking about moving to the Enterprise plan. Can someone walk us through pricing?\" },\n  { ticket_id: 'T-1004', message: 'THIS IS THE THIRD TIME THE DASHBOARD HAS CRASHED TODAY. Fix it or we cancel.' },\n  { ticket_id: 'T-1005', message: 'Hey, quick question about your company.' },\n].map((json) => ({ json }));"
+			},
+			"id": "fcaa0ede-6466-4568-9865-8796bed2cd4e",
+			"name": "Sample tickets",
+			"type": "n8n-nodes-base.code",
+			"typeVersion": 2,
+			"position": [
+				220,
+				300
+			]
+		},
+		{
+			"parameters": {
+				"operation": "ask",
+				"model": {
+					"__rl": true,
+					"mode": "list",
+					"value": "jev-latest",
+					"cachedResultName": "jev-latest"
+				},
+				"stateSource": "text",
+				"stateText": "={{ $json.message }}",
+				"questionMode": "fields",
+				"questions": {
+					"question": [
+						{
+							"type": "choice",
+							"id": "department",
+							"instructions": "Which team should handle this support ticket?",
+							"choiceOptions": "billing: Payments, invoices, refunds, charges\ntechnical: Bugs, outages, crashes, integrations\nsales: Pricing, plans, upgrades, new accounts"
+						},
+						{
+							"type": "score",
+							"id": "frustration",
+							"instructions": "How frustrated is the customer?",
+							"scoreLevels": "Calm, just stating facts\nFrustrated but civil\nVery angry, strong language or threats"
+						},
+						{
+							"type": "noul",
+							"id": "is_urgent",
+							"instructions": "Does the customer need a response urgently?",
+							"trueCriterion": "Business is blocked, money is being lost, or the customer asks for immediate help",
+							"falseCriterion": "A question or request that can wait for the normal queue"
+						}
+					]
+				},
+				"options": {}
+			},
+			"id": "0cfa26ae-6ff4-4e2d-b9ba-0cc59646c5e9",
+			"name": "Jev: Triage ticket",
+			"type": "n8n-nodes-jev.jev",
+			"typeVersion": 1,
+			"position": [
+				440,
+				300
+			],
+			"credentials": {
+				"jevApi": {
+					"name": "Jev (TypeSafe) account"
+				}
+			}
+		},
+		{
+			"parameters": {
+				"conditions": {
+					"options": {
+						"caseSensitive": true,
+						"leftValue": "",
+						"typeValidation": "loose",
+						"version": 2
+					},
+					"conditions": [
+						{
+							"id": "5c0d9ad0-49af-44ae-a8eb-422dcc1f688e",
+							"leftValue": "={{ $json.jev.is_urgent }}",
+							"rightValue": 0.8,
+							"operator": {
+								"type": "number",
+								"operation": "gte"
+							}
+						},
+						{
+							"id": "7102627d-4739-409d-af10-49a25635430f",
+							"leftValue": "={{ $json.jev.frustration }}",
+							"rightValue": 1.5,
+							"operator": {
+								"type": "number",
+								"operation": "gte"
+							}
+						}
+					],
+					"combinator": "or"
+				},
+				"looseTypeValidation": true,
+				"options": {}
+			},
+			"id": "5d8c786f-23ff-4ef8-a1af-87cc082596b5",
+			"name": "Urgent or very angry?",
+			"type": "n8n-nodes-base.if",
+			"typeVersion": 2.2,
+			"position": [
+				680,
+				300
+			]
+		},
+		{
+			"parameters": {
+				"assignments": {
+					"assignments": [
+						{
+							"id": "62537e1d-9ee7-429e-bc1f-92476617d421",
+							"name": "priority",
+							"value": "P1",
+							"type": "string"
+						},
+						{
+							"id": "05b9d9fa-7f4b-4cab-9fac-98f3f6b908ff",
+							"name": "team",
+							"value": "={{ $json.jev.department }}",
+							"type": "string"
+						},
+						{
+							"id": "71d56c07-7cf6-4746-9e08-ca1ff7640cf9",
+							"name": "reason",
+							"value": "={{ $json.jev.is_urgent >= 0.8 ? 'urgent' : 'very frustrated customer' }}",
+							"type": "string"
+						}
+					]
+				},
+				"includeOtherFields": true,
+				"options": {}
+			},
+			"id": "6f94eb38-a01f-4aba-ac1a-c35b24ede3bd",
+			"name": "Escalate (P1)",
+			"type": "n8n-nodes-base.set",
+			"typeVersion": 3.4,
+			"position": [
+				920,
+				180
+			]
+		},
+		{
+			"parameters": {
+				"assignments": {
+					"assignments": [
+						{
+							"id": "1e61e1b0-f0d1-43a0-bbc3-ff7d9cc89dca",
+							"name": "priority",
+							"value": "P3",
+							"type": "string"
+						},
+						{
+							"id": "1b9d03e6-4f20-4d00-8fd6-d28f8f572524",
+							"name": "team",
+							"value": "={{ $json.jev.department }}",
+							"type": "string"
+						}
+					]
+				},
+				"includeOtherFields": true,
+				"options": {}
+			},
+			"id": "d3e1c24d-0ae2-4dff-8f18-d3cf4f5abecb",
+			"name": "Standard queue (P3)",
+			"type": "n8n-nodes-base.set",
+			"typeVersion": 3.4,
+			"position": [
+				920,
+				420
+			]
+		},
+		{
+			"parameters": {
+				"content": "## Support ticket triage (Ask Questions)\n\nOne Jev request per ticket answers **three questions at once**:\n- **department** (Choice): billing / technical / sales, plus `department_confidence`\n- **frustration** (Score): 0 = calm to 2 = very angry, plus `frustration_level`\n- **is_urgent** (Noul): probability of yes, 0–1\n\nThe IF node then decides in the workflow, not in the model: urgent (≥ 0.8) or very angry (≥ 1.5) → P1.\n\nSelect your **Jev credential** on the Jev node, then click **Execute workflow**.",
+				"width": 700,
+				"height": 340
+			},
+			"id": "21f534aa-da4e-4d04-914b-f2bb9ba58078",
+			"name": "Sticky Note 9ef3",
+			"type": "n8n-nodes-base.stickyNote",
+			"typeVersion": 1,
+			"position": [
+				-40,
+				-80
+			]
+		}
+	],
+	"connections": {
+		"When clicking ‘Execute workflow’": {
+			"main": [
+				[
+					{
+						"node": "Sample tickets",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Sample tickets": {
+			"main": [
+				[
+					{
+						"node": "Jev: Triage ticket",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Jev: Triage ticket": {
+			"main": [
+				[
+					{
+						"node": "Urgent or very angry?",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Urgent or very angry?": {
+			"main": [
+				[
+					{
+						"node": "Escalate (P1)",
+						"type": "main",
+						"index": 0
+					}
+				],
+				[
+					{
+						"node": "Standard queue (P3)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		}
+	},
+	"pinData": {},
+	"settings": {
+		"executionOrder": "v1"
+	},
+	"active": false,
+	"meta": {
+		"templateCredsSetupCompleted": false
+	},
+	"tags": []
+}

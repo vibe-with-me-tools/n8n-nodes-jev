@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Package archives from `npm pack`
+*.tgz
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Test coverage
+coverage/
+
+# Editors (keep shared VS Code recommendations)
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db

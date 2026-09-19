@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="992" height="400" viewBox="0 0 992 400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+	<title>Route by Choice: each route is an output of the Jev node, and uncertain items go to a separate Low Confidence output</title>
+	<defs>
+		<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+			<path d="M0,0 L10,5 L0,10 z" fill="#98A2B3"/>
+		</marker>
+		<marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+			<path d="M0,0 L10,5 L0,10 z" fill="#3B5BDB"/>
+		</marker>
+		<marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+			<path d="M0,0 L10,5 L0,10 z" fill="#B54708"/>
+		</marker>
+	</defs>
+	<style>
+		.card { fill: #FFFFFF; stroke: #E4E7EC; }
+		.box { fill: #F9FAFB; stroke: #D0D5DD; }
+		.jev { fill: #EEF2FF; stroke: #3B5BDB; }
+		.title { font-size: 14px; font-weight: 600; fill: #101828; }
+		.label { font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; fill: #667085; }
+		.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; fill: #1D2939; }
+		.port { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; fill: #344054; }
+		.name { font-size: 13px; font-weight: 600; fill: #101828; }
+		.muted { font-size: 12px; fill: #667085; }
+		.caption { font-size: 13px; fill: #475467; }
+		.line { stroke: #D0D5DD; stroke-width: 1.5; fill: none; }
+	</style>
+
+	<rect class="card" x="0.5" y="0.5" width="991" height="399" rx="16"/>
+
+	<!-- input -->
+	<rect class="box" x="32" y="140" width="210" height="120" rx="10"/>
+	<text class="label" x="48" y="166">SUPPORT TICKET</text>
+	<text class="mono" x="48" y="192">"The dashboard</text>
+	<text class="mono" x="48" y="210">crashes every time I</text>
+	<text class="mono" x="48" y="228">open reports."</text>
+	<path d="M246 200 H298" stroke="#98A2B3" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+	<!-- jev node -->
+	<rect class="jev" x="304" y="60" width="250" height="280" rx="10" stroke-width="1.5"/>
+	<text class="title" x="322" y="90">Route by Choice</text>
+	<text class="label" x="322" y="118">INSTRUCTIONS</text>
+	<text class="mono" x="322" y="138">Which team should</text>
+	<text class="mono" x="322" y="156">handle this ticket?</text>
+	<line x1="322" y1="172" x2="536" y2="172" stroke="#C7D2FE"/>
+	<text class="label" x="322" y="196">OUTPUTS</text>
+	<text class="port" x="538" y="224" text-anchor="end">billing</text>
+	<text class="port" x="538" y="258" text-anchor="end">technical</text>
+	<text class="port" x="538" y="292" text-anchor="end">sales</text>
+	<text class="port" x="538" y="326" text-anchor="end" style="fill:#B54708">low confidence</text>
+
+	<!-- connections -->
+	<path class="line" d="M559 220 C630 220 630 130 694 130"/>
+	<path d="M559 254 C630 254 630 190 690 190" stroke="#3B5BDB" stroke-width="2.5" fill="none" marker-end="url(#arrow-blue)"/>
+	<path class="line" d="M559 288 C630 288 630 250 694 250"/>
+	<path d="M559 322 C630 322 630 310 690 310" stroke="#B54708" stroke-width="1.5" stroke-dasharray="5 4" fill="none" marker-end="url(#arrow-amber)"/>
+
+	<circle cx="554" cy="220" r="5" fill="#FFFFFF" stroke="#3B5BDB" stroke-width="1.5"/>
+	<circle cx="554" cy="254" r="5" fill="#3B5BDB" stroke="#3B5BDB" stroke-width="1.5"/>
+	<circle cx="554" cy="288" r="5" fill="#FFFFFF" stroke="#3B5BDB" stroke-width="1.5"/>
+	<circle cx="554" cy="322" r="5" fill="#FFFFFF" stroke="#B54708" stroke-width="1.5"/>
+
+	<!-- destinations -->
+	<rect class="box" x="696" y="108" width="264" height="44" rx="8"/>
+	<text class="name" x="714" y="135">Billing queue</text>
+	<text class="muted" x="944" y="135" text-anchor="end">p = 0.03</text>
+
+	<rect x="696" y="168" width="264" height="44" rx="8" fill="#EEF2FF" stroke="#3B5BDB" stroke-width="1.5"/>
+	<text class="name" x="714" y="195">Technical queue</text>
+	<text class="muted" x="944" y="195" text-anchor="end" style="fill:#3B5BDB">confidence 0.94</text>
+
+	<rect class="box" x="696" y="228" width="264" height="44" rx="8"/>
+	<text class="name" x="714" y="255">Sales queue</text>
+	<text class="muted" x="944" y="255" text-anchor="end">p = 0.01</text>
+
+	<rect x="696" y="288" width="264" height="44" rx="8" fill="#FFFAEB" stroke="#B54708" stroke-dasharray="5 4"/>
+	<text class="name" x="714" y="315">Human review</text>
+	<text class="muted" x="944" y="315" text-anchor="end" style="fill:#B54708">confidence below 0.7</text>
+
+	<text class="caption" x="496" y="376" text-anchor="middle">Each route is an output. Items the model is unsure about go to the Low Confidence output instead of a best guess.</text>
+</svg>
