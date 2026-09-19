@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2 - 2026-09-19
+
+### Maintenance
+
+- Use the maintainer's npm account email as the package author email
+
 ## 0.2.1 - 2026-09-19
 
 ### Documentation
