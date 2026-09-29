@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.3 - 2026-09-29
+
+### Fixes
+
+- With **On Error → Continue (using error output)**, failed items now go to the error output instead of the success output ([#1](https://github.com/vibe-with-me-tools/n8n-nodes-jev/issues/1))
+- With **On Error → Continue (regular output)**, failed Route by Choice items now go to the Low Confidence output instead of the first route, so they can't be mistaken for routing results. Without a Low Confidence output they still go to the first route
+
 ## 0.2.2 - 2026-09-19
 
 ### Maintenance
