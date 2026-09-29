@@ -265,8 +265,21 @@ describe('Route by Choice', () => {
 			continueOnFail: true,
 		});
 		const outputs = await node.execute.call(continuing.executeContext);
-		expect(outputs[0][0].json.error).toMatch(/not one of the configured routes/);
-		expect(outputs[0][0].error).toBeInstanceOf(NodeOperationError);
+		expect(outputs[0]).toHaveLength(0);
+		expect(outputs[3][0].json.error).toMatch(/not one of the configured routes/);
+		expect(outputs[3][0].error).toBeInstanceOf(NodeOperationError);
+	});
+
+	it('sends failed items to the first route when there is no Low Confidence output', async () => {
+		const { executeContext } = createContext(
+			{ ...routeParams, lowConfidence: 'bestRoute', options: { maxRetries: 0 } },
+			items('a'),
+			[{ statusCode: 503, body: { detail: 'down' } }],
+			{ continueOnFail: true },
+		);
+		const outputs = await node.execute.call(executeContext);
+		expect(outputs).toHaveLength(3);
+		expect(outputs[0][0].error).toBeInstanceOf(NodeApiError);
 	});
 
 	it('validates routes before calling the API', async () => {

@@ -208,6 +208,8 @@ Each item leaves through one output and carries:
 }
 ```
 
+If a request fails and the node is set to **On Error → Continue (regular output)**, the item leaves through the Low Confidence output with an `error` field instead of a `jev` result, or through the first route if there's no Low Confidence output. With **Continue (using error output)**, it leaves through the error output.
+
 ### Options
 
 | Option | Default | Description |

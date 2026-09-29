@@ -166,9 +166,12 @@ export class Jev implements INodeType {
 						: new NodeOperationError(this.getNode(), error as Error, { itemIndex });
 
 				if (this.continueOnFail()) {
+					// A failed route item must not look like a real routing result, so it goes to the
+					// Low Confidence output when there is one.
+					const failedOutput = lowConfidenceOutput ? routeNames.length : 0;
 					// n8n moves an item to the error output only when `error` is set on the item
 					// (or its json holds nothing but the error), so set it alongside the input fields.
-					returnData[0].push({
+					returnData[failedOutput].push({
 						json: { ...items[itemIndex].json, error: nodeError.message },
 						error: nodeError,
 						pairedItem: { item: itemIndex },
