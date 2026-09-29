@@ -5,7 +5,7 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
-import { jsonParse, NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
+import { jsonParse, NodeApiError, NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 import { searchModels } from './listSearch/searchModels';
 import {
 	modelProperty,
@@ -18,7 +18,6 @@ import {
 import type { QuestionField } from './shared/questions';
 import {
 	buildQuestionsFromFields,
-	QuestionDefinitionError,
 	simplifyResponse,
 	validateQuestionsJson,
 } from './shared/questions';
@@ -162,13 +161,16 @@ export class Jev implements INodeType {
 				});
 			} catch (error) {
 				const nodeError =
-					error instanceof QuestionDefinitionError
-						? new NodeOperationError(this.getNode(), error.message, { itemIndex })
-						: error;
+					error instanceof NodeApiError || error instanceof NodeOperationError
+						? error
+						: new NodeOperationError(this.getNode(), error as Error, { itemIndex });
 
 				if (this.continueOnFail()) {
+					// n8n moves an item to the error output only when `error` is set on the item
+					// (or its json holds nothing but the error), so set it alongside the input fields.
 					returnData[0].push({
 						json: { ...items[itemIndex].json, error: nodeError.message },
+						error: nodeError,
 						pairedItem: { item: itemIndex },
 					});
 					continue;

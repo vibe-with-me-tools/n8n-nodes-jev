@@ -194,6 +194,19 @@ describe('Ask Questions', () => {
 		expect(output[0].json).toMatchObject({ message: 'a', error: expect.any(String) });
 		expect(output[1].json.jev).toMatchObject({ department: 'billing' });
 	});
+
+	it('marks failed items so n8n can send them to the error output', async () => {
+		const { executeContext } = createContext(
+			{ ...askParams, options: { maxRetries: 0 } },
+			items('a', 'b'),
+			[{ statusCode: 503, body: { detail: 'down' } }, ok(quickstartResponse)],
+			{ continueOnFail: true },
+		);
+		const [output] = await node.execute.call(executeContext);
+		expect(output[0].error).toBeInstanceOf(NodeApiError);
+		expect(output[0].pairedItem).toEqual({ item: 0 });
+		expect(output[1].error).toBeUndefined();
+	});
 });
 
 describe('Route by Choice', () => {
@@ -253,6 +266,7 @@ describe('Route by Choice', () => {
 		});
 		const outputs = await node.execute.call(continuing.executeContext);
 		expect(outputs[0][0].json.error).toMatch(/not one of the configured routes/);
+		expect(outputs[0][0].error).toBeInstanceOf(NodeOperationError);
 	});
 
 	it('validates routes before calling the API', async () => {
